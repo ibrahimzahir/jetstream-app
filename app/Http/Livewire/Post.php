@@ -16,7 +16,7 @@ class Post extends Component
 
     public $title;
     public $body;
-    public $image;
+    public $photo;
     public $postId = null;
     public $newImage;
 
@@ -37,17 +37,17 @@ class Post extends Component
         $this->validate([
           'title' =>'required',
           'body'  => 'required',
-          'image' => 'required|image|max:1024'
+          'photo' => 'required|image|mimes:jpeg,png,jpg|max:1024'
       ]);
 
-        $image_name = $this->image->getClientOriginalName();
-        $this->image->storeAs('public/photos/', $image_name);
-        $post =new Posts();
+        $image_name = $this->photo->getClientOriginalName();
+        $this->photo->storeAs('public/photos/', $image_name);
+        $post = new Posts();
         $post->user_id = auth()->user()->id;
         $post->title = $this->title;
         $post->slug = Str::slug($this->title);
         $post->body = $this->body;
-        $post->image = $image_name;
+        $post->photo = $image_name;
         $post->save();
         $this->reset();
         session()->flash('flash.banner', 'Post created Successfully');
@@ -65,7 +65,7 @@ class Post extends Component
         $post = Posts::findOrFail($this->postId);
         $this->title = $post->title;
         $this->body = $post->body;
-        $this->newImage = $post->image;
+        $this->newImage = $post->photo;
     }
 
     public function updatePost()
@@ -73,18 +73,18 @@ class Post extends Component
         $this->validate([
           'title' =>'required',
           'body'  => 'required',
-          'image' => 'image|max:1024|nullable'
+          'photo' => 'image|max:1024|nullable'
       ]);
-        if ($this->image) {
+        if ($this->photo) {
             Storage::delete('public/photos/', $this->newImage);
-            $this->newImage = $this->image->getClientOriginalName();
-            $this->image->storeAs('public/photos/', $this->newImage);
+            $this->newImage = $this->photo->getClientOriginalName();
+            $this->photo->storeAs('public/photos/', $this->newImage);
         }
 
         Post::find($this->postId)->update([
              'title' => $this->title,
              'body'  => $this->body,
-             'image' => $this->newImage
+             'photo' => $this->newImage
         ]);
         $this->reset();
         session()->flash('flash.banner', 'Post Updated Successfully');
@@ -93,7 +93,7 @@ class Post extends Component
     public function deletePost($id)
     {
         $post = Posts::find($id);
-        Storage::delete('public/photos/', $post->image);
+        Storage::delete('public/photos/', $post->photo);
         $post->delete();
         session()->flash('flash.banner', 'Post Deleted Successfully');
     }

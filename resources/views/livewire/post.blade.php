@@ -40,7 +40,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <img class="w-8 h-8 rounded-full" src="{{ asset('storage/photos/'. $post->image ) }}" />
+                                <img class="w-8 h-8 rounded-full" src="{{ asset('public/photos/'. $post->photo ) }}" />
                             </td>
                             <td class="px-6 py-4 text-right text-sm">
                                 <x-jet-button wire:click="showEditPostModal({{ $post->id }})" class="bg-blue-700">
@@ -64,7 +64,7 @@
         <x-slot name="title">Create Post</x-slot>
         <x-slot name="content">
             <div class="space-y-8 divide-y divide-gray-200  mt-10">
-                <form enctype="multipart/form-data">
+                <form form wire:submit.prevent="storePost" enctype="multipart/form-data">
                     <div class="sm:col-span-6">
                         <label for="title" class="block text-sm font-medium text-xl text-gray-700"> Post Title </label>
                         <div class="mt-1">
@@ -77,19 +77,19 @@
                         <div class="w-full m-2 p-2">
                             @if ($newImage)
                             Post Photo:
-                            <img src="{{ asset('storage/photos/'. $newImage ) }}">
+                            <img src="{{ asset('public/photos/'. $newImage ) }}">
                             @endif
-                            @if ($image)
+                            @if ($photo)
                             Photo Preview:
-                            <img src="{{ $image->temporaryUrl() }}">
+                            <img src="{{ $photo->temporaryUrl() }}">
                             @endif
                         </div>
-                        <label for="title" class="block text-sm font-medium  text-xl text-gray-600"> Post Image </label>
+                        <label for="photo" class="block text-sm font-medium  text-xl text-gray-600"> Post Image </label>
                         <div class="mt-1">
-                            <input type="file" id="image" wire:model="image" name="image"
+                            <input type="file" id="photo" wire:model="photo" name="photo"
                                 class="block w-full transition duration-150 ease-in-out appearance-none bg-white border-2 border-gray-300 rounded-md py-2 px-3 text-base leading-normal transition duration-150 ease-in-out sm:text-sm sm:leading-5" />
                         </div>
-                        @error('image') <span class="error">{{ $message }}</span> @enderror
+                        @error('photo') <span class="error">{{ $message }}</span> @enderror
                     </div>
                     <div class="sm:col-span-6 pt-5">
                         <label for="body" class="block text-sm font-medium text-xl text-gray-600">Body</label>

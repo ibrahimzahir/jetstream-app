@@ -19,7 +19,7 @@ class CreatePostsTable extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('body');
-            $table->string('image');
+            $table->string('photo');
             $table->boolean('active')->default(1);
             $table->timestamps();
         });
